@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipment Borrowing System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">Equipment Borrowing System</div>
+  <div class="nav-right">
+    <span id="userEmail"></span>
+    <button onclick="logout()" class="btn-danger">Logout</button>
+  </div>
+</nav>
+
+<main class="container">
+  <h1>Dashboard</h1>
+  <p>Equipment Borrowing and Return Monitoring</p>
+
+  <div class="dashboard-grid">
+    <div class="dashboard-card"><h3>Total Equipment</h3><p id="totalEquipment">0</p></div>
+    <div class="dashboard-card"><h3>Available</h3><p id="availableEquipment">0</p></div>
+    <div class="dashboard-card"><h3>Borrowed</h3><p id="borrowedEquipment">0</p></div>
+    <div class="dashboard-card"><h3>Returned</h3><p id="returnedTransactions">0</p></div>
+    <div class="dashboard-card"><h3>Overdue</h3><p id="overdueEquipment">0</p></div>
+  </div>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Equipment</h2>
+      <button class="btn-primary" onclick="showAddEquipmentForm()">+ Add Equipment</button>
+    </div>
+    <input type="text" id="equipmentSearch" placeholder="Search equipment or asset code..." onkeyup="searchEquipment()">
+    <div id="equipmentFormContainer"></div>
+    <div class="table-container">
+      <table>
+        <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Asset Code</th><th>Condition</th><th>Availability</th><th>Actions</th></tr></thead>
+        <tbody id="equipmentTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <h2>Borrowing Transactions</h2>
+      <button class="btn-primary" onclick="showBorrowForm()">+ New Borrowing</button>
+    </div>
+    <div id="borrowFormContainer"></div>
+    <div class="filters">
+      <input type="text" id="transactionSearch" placeholder="Search borrower..." onkeyup="searchTransactions()">
+      <select id="statusFilter" onchange="filterTransactions()">
+        <option value="All">All Status</option>
+        <option value="Borrowed">Borrowed</option>
+        <option value="Returned">Returned</option>
+        <option value="Overdue">Overdue</option>
+      </select>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead><tr><th>ID</th><th>Equipment</th><th>Borrower</th><th>Type</th><th>Department</th><th>Date Borrowed</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="transactionTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/equipment.js"></script>
+<script src="js/transactions.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const session = await checkAuthentication();
+  if (!session) return;
+  document.getElementById("userEmail").textContent = session.user.email;
+  loadEquipment();
+  loadTransactions();
+  loadDashboard();
+});
+</script>
+</body>
+</html>
